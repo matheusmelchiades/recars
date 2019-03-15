@@ -1,0 +1,30 @@
+{
+    "brands": {
+        "id": "0",
+        "name": "name brand",
+        "url": "https://parallelum.com.br/fipe/api/v1/carros/marcas"
+    },
+    "models": {
+        "id": "1",
+        "brand_id": "0",
+        "name": "MODEL NAME",
+        "url": "https://parallelum.com.br/fipe/api/v1/carros/marcas/0/modelos"
+    },
+    "years": {
+        "id": "2",
+        "model_id": 1,
+        "name": "2000",
+        "url": "https://parallelum.com.br/fipe/api/v1/carros/marcas/0/modelos/1/anos"
+    },
+    "cars": {
+        "id": 3,
+        "brand_id": "0",
+        "model_id": "1",
+        "year_id": "2",
+        "fuel": "DIESEL GASOLINA....",
+        "fipe_id": "9000",
+        "monthRef": "Março de 2019",
+        "typeVehicle": "1",
+        "sigleFuel": "D" 
+    }
+}
