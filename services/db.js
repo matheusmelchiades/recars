@@ -9,28 +9,27 @@ const config = {
 
 mongoose.connect(`mongodb://${config.user}:${config.password}@${config.host}:${config.port}/${config.database}`, { useNewUrlParser: true })
 
-
-const YearModel = mongoose.Schema({
-    "id": String,
-    "model_id": String,
-    "name": String,
+const BrandModel = mongoose.Schema({
+    'id': Number,
+    'name': String,
 }, { versionKey: false })
 
 const ModelModel = mongoose.Schema({
-    "id": String,
+    "id": Number,
     "brand_id": String,
     "name": String
 }, { versionKey: false })
 
-const BrandModel = mongoose.Schema({
-    'id': String,
-    'name': String,
+const YearModel = mongoose.Schema({
+    "id": String,
+    "model_id": Number,
+    "name": String,
 }, { versionKey: false })
 
 const CarModel = mongoose.Schema({
     "id": String,
-    "brand_id": String,
-    "model_id": String,
+    "brand_id": Number,
+    "model_id": Number,
     "year_id": String,
     "fuel": String,
     "fipe_id": String,
@@ -40,8 +39,8 @@ const CarModel = mongoose.Schema({
 }, { versionKey: false })
 
 module.exports = {
-    brands: mongoose.model('api_brands', BrandModel),
-    models: mongoose.model('api_models', ModelModel),
-    years: mongoose.model('api_years', YearModel),
-    cars: mongoose.model('api_cars', CarModel)
+    brands: mongoose.model('brands', BrandModel),
+    models: mongoose.model('models', ModelModel),
+    years: mongoose.model('years', YearModel),
+    cars: mongoose.model('cars', CarModel)
 }
