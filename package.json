@@ -1,0 +1,20 @@
+{
+  "name": "recars",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:app\"",
+    "dev:app": "npm run start --workspace=apps/app",
+    "dev:server": "npm run dev --workspace=packages/server",
+    "build:app": "npm run build --workspace=apps/app",
+    "test": "npm run test --workspaces --if-present",
+    "test:server": "npm run test --workspace=packages/server"
+  },
+  "devDependencies": {
+    "concurrently": "^8.0.0"
+  }
+}

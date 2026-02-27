@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: mongo:4.4
+    container_name: recars-mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${DB_USER:-admin}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_PASSWORD:-password}
+      MONGO_INITDB_DATABASE: ${DB_NAME:-recars}
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - recars-network
+
+  server:
+    build:
+      context: ./packages/server
+      dockerfile: Dockerfile
+    container_name: recars-server
+    restart: unless-stopped
+    depends_on:
+      - mongodb
+    environment:
+      NODE_ENV: production
+      PORT: 5000
+      AUTH_SECRET: ${AUTH_SECRET:-supersecretkey}
+      DB_HOST: mongodb
+      DB_PORT: 27017
+      DB_NAME: ${DB_NAME:-recars}
+      DB_USER: ${DB_USER:-admin}
+      DB_PASSWORD: ${DB_PASSWORD:-password}
+      API_IMG_URL: ${API_IMG_URL:-}
+      API_IMG_KEY: ${API_IMG_KEY:-}
+    ports:
+      - "5000:5000"
+    networks:
+      - recars-network
+
+  app:
+    build:
+      context: ./apps/app
+      dockerfile: Dockerfile
+      args:
+        REACT_APP_API: http://localhost:5000
+    container_name: recars-app
+    restart: unless-stopped
+    depends_on:
+      - server
+    ports:
+      - "3000:80"
+    networks:
+      - recars-network
+
+volumes:
+  mongo_data:
+
+networks:
+  recars-network:
+    driver: bridge

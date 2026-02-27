@@ -1,0 +1,23 @@
+
+#NODE
+node_modules
+
+#ENVIROMENTS
+.env
+
+#TETST
+__tests__/coverage
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+#package
+package-lock.json
+
+#mongo-memory-server
+
+mongod.lock
+storage.bson
+diagnostic.data

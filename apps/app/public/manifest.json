@@ -1,0 +1,15 @@
+{
+  "short_name": "Recars",
+  "name": "Recars sample",
+  "icons": [
+    {
+      "src": "icon_branco.png",
+      "sizes": "100x100 32x32 24x24 16x16",
+      "type": "image"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
