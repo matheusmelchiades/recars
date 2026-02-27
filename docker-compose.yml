@@ -36,7 +36,7 @@ services:
       API_IMG_URL: ${API_IMG_URL:-}
       API_IMG_KEY: ${API_IMG_KEY:-}
     ports:
-      - "5000:5000"
+      - "5001:5000"
     networks:
       - recars-network
 
@@ -45,7 +45,7 @@ services:
       context: ./apps/app
       dockerfile: Dockerfile
       args:
-        REACT_APP_API: http://localhost:5000
+        REACT_APP_API: http://localhost:5001
     container_name: recars-app
     restart: unless-stopped
     depends_on:
