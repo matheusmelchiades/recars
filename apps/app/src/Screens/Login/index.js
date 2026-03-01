@@ -12,6 +12,7 @@ import Snackbar from '../../components/Snackbar';
 class Login extends Component {
   state = {
     tab: 0,
+    loading: false,
     loader: {
       open: false,
       type: 'info',
@@ -25,6 +26,7 @@ class Login extends Component {
   };
 
   signin = async (values) => {
+    this.setState({ loading: true })
     try {
       const resp = await signin(values)
 
@@ -34,28 +36,27 @@ class Login extends Component {
       this.props.history.push('/')
 
     } catch (err) {
-      console.log(err)
-
       this.setState({
-        ...this.state,
         loader: {
           ...this.state.loader,
           open: true,
           type: 'error',
-          message: 'Username or Senha incorretos!'
+          message: 'Username ou senha incorretos!'
         }
       })
+    } finally {
+      this.setState({ loading: false })
     }
   }
 
   signup = async (values) => {
+    this.setState({ loading: true })
     try {
       const resp = await signup(values)
 
       if (resp.status !== 200) return
 
       this.setState({
-        ...this.state,
         loader: {
           ...this.state.loader,
           open: true,
@@ -64,17 +65,16 @@ class Login extends Component {
         }
       }, this.handleChange)
     } catch (err) {
-      console.log(err)
-
       this.setState({
-        ...this.state,
         loader: {
           ...this.state.loader,
           open: true,
           type: 'error',
-          message: 'Username or Senha incorretos!'
+          message: 'Erro ao cadastrar. Tente novamente!'
         }
       })
+    } finally {
+      this.setState({ loading: false })
     }
   }
 
@@ -92,10 +92,10 @@ class Login extends Component {
             axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
             index={this.state.tab}>
             {
-              this.state.tab === 0 ? <Signin onSignin={this.signin} /> : <div></div>
+              this.state.tab === 0 ? <Signin onSignin={this.signin} loading={this.state.loading} /> : <div></div>
             }
             {
-              this.state.tab === 1 ? <Signup onSignup={this.signup} /> : <div></div>
+              this.state.tab === 1 ? <Signup onSignup={this.signup} loading={this.state.loading} /> : <div></div>
             }
           </SwipeableView>
 

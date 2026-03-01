@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { withStyles, Avatar, Typography, FormControl, InputLabel, Input, Button } from '@material-ui/core';
+import { withStyles, Avatar, Typography, FormControl, InputLabel, Input, Button, CircularProgress } from '@material-ui/core';
 import styles from './style';
 import HowToRegIcon from '@material-ui/icons/HowToReg';
 
@@ -37,7 +37,7 @@ export class Signup extends Component {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, loading } = this.props;
 
     return (
       <div>
@@ -48,21 +48,22 @@ export class Signup extends Component {
         <form className={classes.form}>
           <FormControl margin="normal" required fullWidth>
             <InputLabel>Username</InputLabel>
-            <Input name="username" autoComplete="username" autoFocus onChange={this.handleInputUSername} />
+            <Input name="username" autoComplete="username" autoFocus onChange={this.handleInputUSername} disabled={loading} />
           </FormControl>
           <FormControl margin="normal" required fullWidth>
             <InputLabel>Password</InputLabel>
-            <Input type="password" name="password" autoComplete="current-password" onChange={this.handleInputPassword} />
+            <Input type="password" name="password" autoComplete="current-password" onChange={this.handleInputPassword} disabled={loading} />
           </FormControl>
           <FormControl margin="normal" required fullWidth>
             <InputLabel>Password Confirm</InputLabel>
-            <Input type="password" name="passwordConfirm" onChange={this.handleInputPasswordConfirm} />
+            <Input type="password" name="passwordConfirm" onChange={this.handleInputPasswordConfirm} disabled={loading} />
           </FormControl>
 
           <Button className={classes.submit} fullWidth variant="contained" color="primary"
-            onClick={this.handleSubmit}>
-            sign up
-                    </Button>
+            onClick={this.handleSubmit}
+            disabled={loading}>
+            {loading ? <CircularProgress size={24} color="inherit" /> : 'sign up'}
+          </Button>
         </form>
       </div>
     )

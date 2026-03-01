@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { withStyles, Avatar, Typography, FormControl, InputLabel, Input, Button } from '@material-ui/core';
+import { withStyles, Avatar, Typography, FormControl, InputLabel, Input, Button, CircularProgress } from '@material-ui/core';
 import styles from './style'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 
@@ -23,7 +23,7 @@ export class Signin extends Component {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, loading } = this.props;
 
     return (
       <div>
@@ -36,16 +36,17 @@ export class Signin extends Component {
         <form className={classes.form}>
           <FormControl margin="normal" required fullWidth>
             <InputLabel>Username</InputLabel>
-            <Input name="username" onChange={this.handleInputUsername} autoFocus />
+            <Input name="username" onChange={this.handleInputUsername} autoFocus disabled={loading} />
           </FormControl>
           <FormControl margin="normal" required fullWidth>
             <InputLabel>Password</InputLabel>
-            <Input type="password" name="password" onChange={this.handleInputPassword} autoComplete="current-password" />
+            <Input type="password" name="password" onChange={this.handleInputPassword} autoComplete="current-password" disabled={loading} />
           </FormControl>
 
           <Button className={classes.submit} fullWidth variant="contained" color="primary"
-            onClick={() => this.props.onSignin(this.state)}>
-            sign in
+            onClick={() => this.props.onSignin(this.state)}
+            disabled={loading}>
+            {loading ? <CircularProgress size={24} color="inherit" /> : 'sign in'}
           </Button>
         </form>
       </div>
