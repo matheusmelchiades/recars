@@ -1,0 +1,16 @@
+FROM node:14-alpine
+
+WORKDIR /app
+
+# Build tools para módulos nativos (bcrypt)
+RUN apk add --no-cache python3 make g++
+
+# nodemon global para hot reload
+RUN npm install -g nodemon
+
+COPY package*.json ./
+RUN npm install
+
+EXPOSE 5000
+
+CMD ["nodemon", "server.js", "--ignore", "__tests__"]
