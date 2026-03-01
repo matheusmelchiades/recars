@@ -27,32 +27,37 @@ recars/
 
 ---
 
-## Rodando com Docker (recomendado)
+## Rodando com Docker
 
-### 1. Configure as variáveis de ambiente
+### Modo desenvolvimento (hot reload)
+
+Alterações nos arquivos refletem automaticamente sem precisar rebuildar.
 
 ```bash
 cp .env.example .env
+docker-compose -f docker-compose.dev.yml up --build
 ```
 
-Edite o `.env` com os valores desejados.
+### Modo produção
 
-### 2. Suba todos os serviços
+Build otimizado servido via nginx.
 
 ```bash
+cp .env.example .env
 docker-compose up --build
 ```
 
 | Serviço   | URL                      |
 |-----------|--------------------------|
 | App       | http://localhost:3000    |
-| API       | http://localhost:5000    |
+| API       | http://localhost:5001    |
 | MongoDB   | localhost:27017          |
 
 ### Parar os serviços
 
 ```bash
-docker-compose down
+docker-compose down                              # produção
+docker-compose -f docker-compose.dev.yml down    # dev
 ```
 
 Para remover também os dados do banco:
