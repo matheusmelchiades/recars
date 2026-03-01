@@ -1,68 +1,76 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Recars App
 
-## Available Scripts
+Frontend React para o sistema de recomendação de carros Recars.
 
-In the project directory, you can run:
+## Tecnologias
 
-### `npm start`
+- React 16.8 (Class Components)
+- Material UI 3.9
+- React Router DOM 5
+- Axios
+- react-swipeable-views
 
-Runs the app in the development mode.<br>
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## Estrutura
 
-The page will reload if you make edits.<br>
-You will also see any lint errors in the console.
+```
+src/
+├── App/            # App wrapper com tema Material UI
+├── Screens/
+│   ├── Login/      # Signin / Signup com tabs
+│   └── case/
+│       ├── search/      # Buscar recomendações
+│       ├── createCase/  # Criar novo caso
+│       ├── penging/     # Pendências de aprovação
+│       └── approved/    # Casos aprovados
+├── components/     # Menu, CardCar, Autocomplete, Snackbar, Dropdown
+├── services/       # Cliente Axios (api.js)
+├── helper/         # Auth (localStorage JWT)
+├── config/         # Rotas e tema MUI
+└── assets/         # Logo
+```
 
-### `npm test`
+## Variáveis de Ambiente
 
-Launches the test runner in the interactive watch mode.<br>
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+| Variável | Default | Descrição |
+|----------|---------|-----------|
+| `REACT_APP_API` | `http://localhost:5001` | URL da API backend |
 
-### `npm run build`
+## Rotas
 
-Builds the app for production to the `build` folder.<br>
-It correctly bundles React in production mode and optimizes the build for the best performance.
+| Rota | Tela | Descrição |
+|------|------|-----------|
+| `/login` | Login | Signin / Signup |
+| `/` | Search | Buscar recomendações de carros |
+| `/case` | CreateCase | Cadastrar novo caso |
+| `/penging` | Penging | Aprovar casos pendentes |
+| `/cases` | Approved | Listar casos aprovados |
 
-The build is minified and the filenames include the hashes.<br>
-Your app is ready to be deployed!
+## Autenticação
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+1. Usuário faz login via `/signin`
+2. JWT é armazenado em `localStorage` com a chave `@RECARS::USER`
+3. Todas as requisições enviam o header `Authorization: Bearer <token>`
+4. Ao acessar `/`, o app verifica o token via `GET /auth`
+5. Menu visível depende da role do usuário (vem do endpoint `/fields`)
 
-### `npm run eject`
+## Scripts
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+```bash
+npm start     # Dev server (porta 3000)
+npm run build # Build de produção
+npm test      # Testes com Jest
+```
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Docker
 
-Instead, it will copy all the configuration files and the transitive dependencies (Webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+**Produção** (nginx):
+```dockerfile
+# Dockerfile - build multi-stage com nginx
+docker build -t recars-app .
+```
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
-
-### Analyzing the Bundle Size
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
-
-### Making a Progressive Web App
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
-
-### Advanced Configuration
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
-### Deployment
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
-
-### `npm run build` fails to minify
-
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+**Desenvolvimento** (hot reload):
+```dockerfile
+# Dockerfile.dev - CRA dev server com polling para Docker
+docker build -f Dockerfile.dev -t recars-app-dev .
+```
