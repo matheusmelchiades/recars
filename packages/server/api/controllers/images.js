@@ -1,30 +1,44 @@
-module.exports = (app) => {
+const axios = require('axios');
 
-    const model = app.api.models.azure;
+module.exports = (app) => {
 
     const searchImage = async (req, res) => {
         try {
-            const { search } = req.query;
-            const User = req.user;
+            const { search, branch } = req.query;
 
-            if (User.role === 'USER') return res.status(400).send('Unauthorized');
+            if (!search) return res.status(400).send('Params Invalid!');
 
-            if (!search) return res.status(400).send('Params Invaid!');
+            const query = branch ? `${branch} ${search} car` : `${search} car`;
 
-            const dataImagesResp = await model.searchImages(search);
+            const response = await axios.get('https://en.wikipedia.org/w/api.php', {
+                headers: { 'User-Agent': 'RecarsApp/1.0' },
+                params: {
+                    action: 'query',
+                    generator: 'search',
+                    gsrsearch: query,
+                    prop: 'pageimages',
+                    piprop: 'thumbnail',
+                    pithumbsize: 300,
+                    pilimit: 30,
+                    format: 'json',
+                    origin: '*'
+                }
+            });
 
-            if (!dataImagesResp || !dataImagesResp.value) return res.status(400).send('Error request integration');
-
-            const images = dataImagesResp.value.map((img) => ({
-                _id: img.imageId,
-                name: img.name,
-                url: img.thumbnailUrl,
-                format: img.encodingFormat
-            }));
+            const pages = response.data.query?.pages || {};
+            const images = Object.values(pages)
+                .filter(page => page.thumbnail)
+                .map(page => ({
+                    _id: String(page.pageid),
+                    name: page.title,
+                    url: page.thumbnail.source,
+                    format: 'jpg'
+                }));
 
             return res.status(200).send(images);
         } catch (err) {
             console.log(err);
+            return res.status(400).send([]);
         }
     };
 

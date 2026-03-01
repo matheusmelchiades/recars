@@ -61,6 +61,14 @@ carsSchema.statics.findCarByModelMany = async function (cars) {
                 { '$project': { '_id': 0 } }
             ]);
 
+            if (!data || !data.length) {
+                return {
+                    ...car,
+                    'years': 'N/A',
+                    'fuels': []
+                };
+            }
+
             return {
                 ...car,
                 'years': `${yearMin(data[0].years)} a ${yearMax(data[0].years)}`,

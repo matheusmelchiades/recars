@@ -9,7 +9,7 @@ module.exports = (app) => {
 
             const fieldDB = await model.findOne({ userRole: req.user.role });
 
-            if (!fieldDB && !fieldDB.fields) return res.status(400).send('Error');
+            if (!fieldDB || !fieldDB.fields) return res.status(400).send('Error');
 
             return res.status(200).send(fieldDB.fields);
 
@@ -23,7 +23,7 @@ module.exports = (app) => {
     const createField = async (req, res) => {
         try {
 
-            if (!req.user.role !== 'ADMIN') return res.status(400).send('Not access');
+            if (req.user.role !== 'ADMIN') return res.status(400).send('Not access');
 
             const { userRole, fields } = req.body;
 

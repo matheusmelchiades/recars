@@ -7,7 +7,7 @@ module.exports = (app) => {
     const find = async (req, res) => {
         try {
 
-            const search = await models.searchs.create({ ...req.body, user: { ...req.user } });
+            const search = await models.searchs.create({ ...req.body, user: req.user._id });
             const cases = await models.cases.findBeetweenPrices(req.body.priceMin, req.body.priceMax);
 
             if (!search) return res.status(400).send('ERROR');

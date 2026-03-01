@@ -7,8 +7,6 @@ module.exports = (app) => {
             const { search } = req.query;
             const User = req.user;
 
-            if (User.role === 'USER') return res.status(400).send('Unauthorized');
-
             if (search) {
                 const brandsBySearch = await model.find({ name: { '$regex': search, '$options': 'i' } });
 

@@ -63,7 +63,7 @@ class Approved extends Component {
 
       if (response.status !== 200) return
 
-      this.setState({ selected: [] }, this.fetchCases)
+      this.setState({ selecteds: [] }, this.fetchCases)
     } catch (err) {
       console.log(err)
     }
@@ -77,7 +77,7 @@ class Approved extends Component {
 
       if (response.status !== 200) return
 
-      this.setState({ selected: [] }, this.fetchCases)
+      this.setState({ selecteds: [] }, this.fetchCases)
     } catch (err) {
       console.log(err)
     }

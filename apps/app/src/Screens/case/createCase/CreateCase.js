@@ -146,7 +146,7 @@ class CreateCase extends Component {
   handleSelectImage = (img) => {
     const caseCurrent = this.state.newCase
 
-    if (caseCurrent.images.length === 3) return
+    if (caseCurrent.images.length === 1) return
     if (caseCurrent.images.some((image) => image._id === img._id)) return
 
     caseCurrent.images.push(img)
@@ -256,15 +256,15 @@ class CreateCase extends Component {
       return this.showSnackBar('info', 'Uso geral não foi selecionado!')
     if (!newCase.competence)
       return this.showSnackBar('info', 'Competencia não foi selecionado!')
-    if (newCase.images.length < 3)
-      return this.showSnackBar('info', 'Três images devem ser selecionada!')
+    if (newCase.images.length < 1)
+      return this.showSnackBar('info', 'Selecione uma imagem!')
 
     return true;
   }
 
   showSnackBar = (type, message) => {
     this.setState({
-      ...this.setState,
+      ...this.state,
       snackbar: {
         ...this.state.snackbar,
         open: true,
@@ -362,7 +362,7 @@ class CreateCase extends Component {
           isOpen={this.state.snackbar.open}
           type={this.state.snackbar.type}
           message={this.state.snackbar.message}
-          onClose={() => this.setState({ ...this.state, snackbar: { ...this.state.loader, open: false } })} />
+          onClose={() => this.setState({ ...this.state, snackbar: { ...this.state.snackbar, open: false } })} />
 
       </div>
     )

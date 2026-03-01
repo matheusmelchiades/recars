@@ -5,32 +5,36 @@ module.exports = (app) => {
     const modelCar = app.api.models.models;
 
     const getAll = async (req, res) => {
-        const { brand, model } = req.query;
-        const User = req.user;
+        try {
+            const { brand, model } = req.query;
 
-        if (User.role === 'USER') return res.status(400).send('Unauthorized');
+            if (brand || model) {
+                const query = {};
 
-        if (brand || model) {
-            const query = {
-                name: {
-                    '$regex': model,
-                    '$options': 'i'
+                if (model) {
+                    query.name = {
+                        '$regex': model,
+                        '$options': 'i'
+                    };
                 }
-            };
 
-            if (brand && ObjectId.isValid(brand))
-                query.brand_id = ObjectId(brand);
+                if (brand && ObjectId.isValid(brand))
+                    query.brand_id = ObjectId(brand);
 
-            const modelsByBrandId = await modelCar.find(query);
+                const modelsByBrandId = await modelCar.find(query);
 
-            if (!modelsByBrandId) return res.status(400).send([]);
+                if (!modelsByBrandId) return res.status(400).send([]);
 
-            return res.status(200).send(modelsByBrandId);
+                return res.status(200).send(modelsByBrandId);
+            }
+
+            const modelsCar = await modelCar.find({});
+
+            return res.status(200).send(modelsCar);
+        } catch (err) {
+            console.log(err);
+            return res.status(400).send([]);
         }
-
-        const modelsCar = await model.find({});
-
-        return res.status(200).send(modelsCar);
     };
 
     return { getAll };

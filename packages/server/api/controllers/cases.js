@@ -23,9 +23,7 @@ module.exports = (app) => {
             const { oneCase } = req.body;
             const User = req.user;
 
-            if (User.role === 'USER') return res.status(400).send({ message: 'Usuario nao autorizado!' });
-
-            const result = await model.createCase({ ...oneCase, createdBy: User });
+            const result = await model.createCase({ ...oneCase, createdBy: User._id });
 
             if (!result) return res.status(400).send({ message: 'Erro Desconhecido' });
 
@@ -94,7 +92,8 @@ module.exports = (app) => {
 
             return res.status(200).send({ message: 'Deletado com sucesso!' });
         } catch (err) {
-
+            console.log(err);
+            return res.status(500).send({ message: 'Erro desconhecido!' });
         }
     };
 

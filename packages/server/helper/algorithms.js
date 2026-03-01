@@ -18,7 +18,7 @@ const calculateSimCars = (cases, search, fields) => {
         };
     });
 
-    return result.slice(0, 9).sort((a, b) => a.weight + b.weight);
+    return result.sort((a, b) => a.weight - b.weight).slice(0, 9);
 };
 
 module.exports = { calculateSimCars };

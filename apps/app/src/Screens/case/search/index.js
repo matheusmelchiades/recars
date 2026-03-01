@@ -52,7 +52,7 @@ class Search extends Component {
   }
 
   handleSelectItem = (field, item) => {
-    this.setState({ ...this.setState, search: { ...this.state.search, [field]: item } })
+    this.setState({ ...this.state, search: { ...this.state.search, [field]: item } })
   }
 
   clearAll = () => {
@@ -73,12 +73,13 @@ class Search extends Component {
     } catch (err) {
       console.log(err)
       this.showSnackBar('error', 'Erro em buscar')
+      this.setState({ ...this.state, isLoading: false })
     }
   }
 
   showSnackBar = (type, message) => {
     this.setState({
-      ...this.setState,
+      ...this.state,
       snackbar: {
         ...this.state.snackbar,
         open: true,

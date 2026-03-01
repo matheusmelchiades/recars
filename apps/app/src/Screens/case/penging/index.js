@@ -64,7 +64,7 @@ export class Penging extends Component {
 
       if (response.status !== 200) return
 
-      this.setState({ selected: [] }, this.refresh)
+      this.setState({ selecteds: [] }, this.refresh)
     } catch (err) {
       console.log(err)
     }
@@ -78,7 +78,7 @@ export class Penging extends Component {
 
       if (response.status !== 200) return
 
-      this.setState({ selected: [] }, this.refresh)
+      this.setState({ selecteds: [] }, this.refresh)
     } catch (err) {
       console.log(err)
     }
