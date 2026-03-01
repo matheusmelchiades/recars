@@ -1,69 +1,69 @@
 # Recars DB
 
-Scripts de seed, backup e restore do banco MongoDB para o Recars.
+MongoDB seed, backup and restore scripts for Recars.
 
-## Estrutura
+## Structure
 
 ```
 packages/db/
-├── index.js          # Seed: importa dados da API FIPE para o MongoDB
-├── ref.json          # Schema de referência das coleções
+├── index.js          # Seed: imports data from FIPE API into MongoDB
+├── ref.json          # Collection schema reference
 ├── services/
-│   ├── db.js         # Conexão Mongoose + schemas
-│   └── api.js        # Cliente Axios para API FIPE
+│   ├── db.js         # Mongoose connection + schemas
+│   └── api.js        # Axios client for FIPE API
 └── scripts/
-    ├── backup.sh     # Dump completo + restore para outro host
-    ├── export.sh     # Exportar uma coleção para JSON
-    ├── exportAll.sh  # Exportar todas as coleções para JSON
-    ├── import.sh     # Importar coleção de um arquivo JSON
-    └── connect.sh    # Conectar ao MongoDB via shell
+    ├── backup.sh     # Full dump + restore to another host
+    ├── export.sh     # Export a single collection to JSON
+    ├── exportAll.sh  # Export all collections to JSON
+    ├── import.sh     # Import a collection from a JSON file
+    └── connect.sh    # Connect to MongoDB via shell
 ```
 
-## Seed (API FIPE)
+## Seed (FIPE API)
 
-O script principal (`index.js`) busca dados da [API FIPE](https://parallelum.com.br/fipe/api/v1) e popula o banco:
+The main script (`index.js`) fetches data from the [FIPE API](https://parallelum.com.br/fipe/api/v1) and populates the database:
 
-1. Busca todas as **marcas** de carros
-2. Para cada marca, busca os **modelos**
-3. Para cada modelo, busca os **anos** disponíveis
-4. Para cada ano, busca os **dados do veículo** (preço FIPE, combustível, etc.)
-5. Insere em blocos de 100 para gerenciar memória
+1. Fetches all car **brands**
+2. For each brand, fetches **models**
+3. For each model, fetches available **years**
+4. For each year, fetches **vehicle data** (FIPE price, fuel type, etc.)
+5. Inserts in batches of 100 to manage memory
 
 ```bash
-npm start  # Executa o seed
+npm start  # Run the seed
 ```
 
-## Coleções
+## Collections
 
-| Coleção | Campos |
-|---------|--------|
+| Collection | Fields |
+|------------|--------|
 | `brands` | id, name |
 | `models` | id, brand_id, name |
 | `years` | id, model_id, name |
 | `cars` | id, brand_id, model_id, year_id, fuel, fipe_id, monthRef, typeVehicle, sigleFuel |
 
-## Scripts de Backup/Restore
+## Backup/Restore Scripts
 
-Todos os scripts são interativos e pedem credenciais:
+All scripts are interactive and prompt for credentials:
 
 ```bash
-# Exportar todas as coleções para JSON
+# Export all collections to JSON
 bash scripts/exportAll.sh
 
-# Exportar uma coleção específica
+# Export a single collection
 bash scripts/export.sh
 
-# Importar coleção de arquivo JSON
-bash scripts/import.sh arquivo.json
+# Import a collection from a JSON file
+bash scripts/import.sh file.json
 
-# Backup completo (dump + restore)
+# Full backup (dump + restore)
 bash scripts/backup.sh
 
-# Conectar ao MongoDB shell
+# Connect to MongoDB shell
 bash scripts/connect.sh
 ```
 
-## Dependências
+## Dependencies
 
 - mongoose 5.4
 - axios 0.18

@@ -1,79 +1,79 @@
 # Recars Server
 
-API REST para o sistema de recomendação de carros Recars.
+REST API for the Recars car recommendation system.
 
-## Tecnologias
+## Tech Stack
 
 - Node.js 14 + Express 4
 - MongoDB (Mongoose 5)
-- Passport JWT (autenticação)
-- bcrypt (hash de senhas)
-- consign (auto-loading de módulos)
+- Passport JWT (authentication)
+- bcrypt (password hashing)
+- consign (auto-loading modules)
 
-## Estrutura
+## Structure
 
 ```
 packages/server/
 ├── api/
-│   ├── auth/           # Estratégia Passport JWT
-│   ├── controllers/    # Lógica de negócio
-│   ├── models/         # Schemas Mongoose
-│   ├── routes/         # Definições de rotas Express
-│   └── services/       # Integrações externas
+│   ├── auth/           # Passport JWT strategy
+│   ├── controllers/    # Business logic
+│   ├── models/         # Mongoose schemas
+│   ├── routes/         # Express route definitions
+│   └── services/       # External integrations
 ├── config/
-│   ├── database.js     # Conexão MongoDB
+│   ├── database.js     # MongoDB connection
 │   ├── middlewares.js   # CORS, body-parser, morgan
-│   └── system.js       # Variáveis de ambiente
+│   └── system.js       # Environment variables
 ├── helper/
-│   ├── algorithms.js   # Algoritmo de recomendação (distância euclidiana)
+│   ├── algorithms.js   # Recommendation algorithm (Euclidean distance)
 │   ├── encryption.js   # bcrypt wrapper
-│   └── time.js         # Utilitários de tempo
+│   └── time.js         # Time utilities
 ├── scripts/
-│   ├── seed.js              # Popular banco com dados iniciais
-│   └── populate-images.js   # Buscar imagens da Wikipedia para cases
-├── __tests__/               # Testes unitários e de integração
+│   ├── seed.js              # Seed database with initial data
+│   └── populate-images.js   # Fetch Wikipedia images for cases
+├── __tests__/               # Unit and integration tests
 ├── app.js                   # Express app + consign
 └── server.js                # Entry point
 ```
 
-## Variáveis de Ambiente
+## Environment Variables
 
-| Variável | Default | Descrição |
-|----------|---------|-----------|
-| `AUTH_SECRET` | `secret` | Secret para assinar JWT |
-| `DB_NAME` | `default` | Nome do banco MongoDB |
-| `DB_HOST` | `localhost` | Host do MongoDB |
-| `DB_PORT` | `27017` | Porta do MongoDB |
-| `DB_USER` | - | Usuário MongoDB (opcional) |
-| `DB_PASSWORD` | - | Senha MongoDB (opcional) |
-| `PORT` | `5000` | Porta do servidor |
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `AUTH_SECRET` | `secret` | JWT signing secret |
+| `DB_NAME` | `default` | MongoDB database name |
+| `DB_HOST` | `localhost` | MongoDB host |
+| `DB_PORT` | `27017` | MongoDB port |
+| `DB_USER` | - | MongoDB username (optional) |
+| `DB_PASSWORD` | - | MongoDB password (optional) |
+| `PORT` | `5000` | Server port |
 
 ## API Endpoints
 
-### Autenticação
+### Authentication
 
-| Método | Rota | Auth | Descrição |
-|--------|------|------|-----------|
-| POST | `/signup` | - | Criar conta (username, password) |
-| POST | `/signin` | - | Login, retorna `{username, token}` |
-| GET | `/auth` | JWT | Verificar validade do token |
+| Method | Route | Auth | Description |
+|--------|-------|------|-------------|
+| POST | `/signup` | - | Create account (username, password) |
+| POST | `/signin` | - | Login, returns `{username, token}` |
+| GET | `/auth` | JWT | Verify token validity |
 
-### Marcas e Modelos
+### Brands & Models
 
-| Método | Rota | Auth | Descrição |
-|--------|------|------|-----------|
-| GET | `/brands?search=` | JWT | Buscar marcas por nome |
-| GET | `/models?brand=&model=` | JWT | Buscar modelos por marca/nome |
+| Method | Route | Auth | Description |
+|--------|-------|------|-------------|
+| GET | `/brands?search=` | JWT | Search brands by name |
+| GET | `/models?brand=&model=` | JWT | Search models by brand/name |
 
-### Busca (Recomendação)
+### Search (Recommendation)
 
-| Método | Rota | Auth | Descrição |
-|--------|------|------|-----------|
-| POST | `/search` | JWT | Buscar carros recomendados |
-| GET | `/attributes/search` | JWT | Opções do formulário de busca |
-| GET | `/attributes/createCase` | JWT | Opções do formulário de caso |
+| Method | Route | Auth | Description |
+|--------|-------|------|-------------|
+| POST | `/search` | JWT | Find recommended cars |
+| GET | `/attributes/search` | JWT | Search form options |
+| GET | `/attributes/createCase` | JWT | Case form options |
 
-**Body do `/search`:**
+**`/search` request body:**
 ```json
 {
   "places": "4 lugares",
@@ -85,60 +85,60 @@ packages/server/
 }
 ```
 
-### Casos
+### Cases
 
-| Método | Rota | Auth | Role | Descrição |
-|--------|------|------|------|-----------|
-| POST | `/cases` | JWT | Todos | Criar caso novo |
-| GET | `/cases` | JWT | ADMIN | Listar casos aprovados |
-| DELETE | `/cases` | JWT | ADMIN/HELPER | Deletar casos |
-| GET | `/cases/pending` | JWT | ADMIN/HELPER | Listar pendências |
-| POST | `/cases/pending` | JWT | ADMIN/HELPER | Aprovar pendências |
+| Method | Route | Auth | Role | Description |
+|--------|-------|------|------|-------------|
+| POST | `/cases` | JWT | All | Create new case |
+| GET | `/cases` | JWT | ADMIN | List approved cases |
+| DELETE | `/cases` | JWT | ADMIN/HELPER | Delete cases |
+| GET | `/cases/pending` | JWT | ADMIN/HELPER | List pending cases |
+| POST | `/cases/pending` | JWT | ADMIN/HELPER | Approve pending cases |
 
-**Workflow de status:** `PENDING` → `HOMOLOG` (helper) → `APPROVE` (admin) → `DELETED`
+**Status workflow:** `PENDING` → `HOMOLOG` (helper) → `APPROVE` (admin) → `DELETED`
 
-### Outros
+### Other
 
-| Método | Rota | Auth | Descrição |
-|--------|------|------|-----------|
-| GET | `/images?search=&branch=` | JWT | Buscar imagens (Wikipedia API) |
-| GET | `/fields` | JWT | Menu do usuário por role |
-| POST | `/fields` | JWT/ADMIN | Criar permissões de campo |
+| Method | Route | Auth | Description |
+|--------|-------|------|-------------|
+| GET | `/images?search=&branch=` | JWT | Search images (Wikipedia API) |
+| GET | `/fields` | JWT | User menu by role |
+| POST | `/fields` | JWT/ADMIN | Create field permissions |
 
-## Algoritmo de Recomendação
+## Recommendation Algorithm
 
-O sistema usa **distância euclidiana ponderada** para recomendar carros:
+The system uses **weighted Euclidean distance** to recommend cars:
 
-1. Usuário envia critérios de busca (lugares, tipo de uso, motor, preço)
-2. Cada critério é convertido em valor numérico (1-4) via `attributes`
-3. Casos aprovados na faixa de preço são filtrados
-4. Para cada caso, calcula-se a distância euclidiana ponderada:
+1. User submits search criteria (seats, use type, engine, price)
+2. Each criterion is converted to a numeric value (1-4) via `attributes`
+3. Approved cases within the price range are filtered
+4. For each case, the weighted Euclidean distance is calculated:
    ```
-   distância = sqrt(sum(peso_i * |busca_i - caso_i|))
+   distance = sqrt(sum(weight_i * |search_i - case_i|))
    ```
-5. Retorna os 9 casos mais próximos (menor distância)
+5. Returns the 9 closest cases (lowest distance)
 
-**Mapeamento de atributos:**
+**Attribute mapping:**
 
-| Busca (search) | Caso (register) | Opções |
-|----------------|-----------------|--------|
-| `places` | `category` | 2/4/5/7 lugares |
-| `placeUsed` | `type` | Cidade, Estrada, Campo, Misto |
-| `classUse` | `generalUse` | Passeio, Trabalho leve/pesado, Esporte |
-| `motor` | `competence` | Até 1.0, 1.4-1.6, 2.0, Acima de 2.0 |
+| Search field | Case field | Options |
+|-------------|------------|---------|
+| `places` | `category` | 2/4/5/7 seats |
+| `placeUsed` | `type` | City, Highway, Off-road, Mixed |
+| `classUse` | `generalUse` | Leisure, Light work, Heavy work, Sport |
+| `motor` | `competence` | Up to 1.0, 1.4-1.6, 2.0, Above 2.0 |
 
 ## Roles
 
-| Role | Permissões | Menu |
-|------|-----------|------|
-| **ADMIN** | Tudo | Buscar, Novo Caso, Pendências, Aprovados |
-| **HELPER** | Criar, aprovar (HOMOLOG), deletar | Buscar, Pendências, Aprovados |
-| **USER** | Criar, visualizar aprovados | Buscar, Novo Caso, Aprovados |
+| Role | Permissions | Menu |
+|------|------------|------|
+| **ADMIN** | Everything | Search, New Case, Pending, Approved |
+| **HELPER** | Create, approve (HOMOLOG), delete | Search, Pending, Approved |
+| **USER** | Create, view approved | Search, New Case, Approved |
 
-## Coleções MongoDB
+## MongoDB Collections
 
-| Coleção | Campos principais |
-|---------|-------------------|
+| Collection | Main fields |
+|------------|-------------|
 | `users` | username, password (bcrypt), role |
 | `brands` | name |
 | `models` | brand_id, name, priceAverage |
@@ -151,22 +151,22 @@ O sistema usa **distância euclidiana ponderada** para recomendar carros:
 ## Scripts
 
 ```bash
-npm start          # Iniciar servidor
-npm run dev        # Dev com nodemon
-npm run seed       # Popular banco com dados iniciais
-npm test           # Rodar testes
+npm start          # Start server
+npm run dev        # Dev with nodemon
+npm run seed       # Seed database with initial data
+npm test           # Run tests
 ```
 
 ## Docker
 
-**Produção:**
+**Production:**
 ```dockerfile
-# Dockerfile - Alpine com build tools para bcrypt nativo
+# Dockerfile - Alpine with build tools for native bcrypt
 docker build -t recars-server .
 ```
 
-**Desenvolvimento** (hot reload):
+**Development** (hot reload):
 ```dockerfile
-# Dockerfile.dev - nodemon global + volume mount
+# Dockerfile.dev - global nodemon + volume mount
 docker build -f Dockerfile.dev -t recars-server-dev .
 ```
